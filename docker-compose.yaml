@@ -14,21 +14,21 @@ services:
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=root
     networks:
-      - primeira-network
-
+      - primeira-network-bridge
+  
   api-rocket:
+    container_name: api-rocket
     build:
       context: .
-    container_name: api-rocket
-    ports:
+    ports: 
       - 3001:3000
-    depends_on:
+    depends_on: 
       - mysql
     networks:
-      - primeira-network
+      - primeira-network-bridge
 
 networks:
-  primeira-network:
+  primeira-network-bridge:
     driver: bridge
 
 volumes:

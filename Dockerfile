@@ -1,15 +1,18 @@
+#Definindo versão da imagem node que deseja usar no container
 FROM node:18 AS build
 
+#Definindo diretorio 
 WORKDIR /usr/src/app
 
-COPY package.json yarn.lock .yarnrc.yml ./
-COPY .yarn ./.yarn
+#Copiando package.json na interface para o container
+COPY package*.json ./
+RUN npm install
 
-COPY . .
+#Copiando tudo na interface para o container
+COPY . . 
 
-RUN yarn run build
-RUN yarn workspaces focus --production && yarn cache clean
-
+RUN npm run build
+RUN npm install workspaces focus --production && npm cache clean --force
 FROM node:18-alpine3.19
 
 WORKDIR /usr/src/app
@@ -20,4 +23,4 @@ COPY --from=build /usr/src/app/node_modules ./node_modules
 
 EXPOSE 3000
 
-CMD ["yarn", "run", "start:prod"]
+CMD [ "npm", "run", "start:prod" ]
